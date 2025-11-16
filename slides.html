@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Bounty Hunter 2025 — Materi</title>
+    <link rel="stylesheet" href="slides.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+    
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span class="current">1</span> / <span class="total">0</span>
+    </div>
+
+    <!-- Slides Container -->
+    <div class="slides-container">
+        
+        <!-- Slide 1: Cover -->
+        <section class="slide active">
+            <div class="slide-content center">
+                <div class="badge">🎯 Bug Bounty 2025</div>
+                <h1>Bug Bounty Hunter<br><span class="highlight">Modern Edition</span></h1>
+                <p class="subtitle">Vuln yang beneran worth it — bukan XSS receh</p>
+            </div>
+        </section>
+
+        <!-- Slide 2: Modul 1 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">01</div>
+                <h2>Mentality of Modern Hunters</h2>
+                <div class="content-box">
+                    <p>Sebelum nge-hack, lu harus punya mindset yang bener dulu.</p>
+                    <ul class="bullet-list">
+                        <li>Cara mikir kayak top hunter</li>
+                        <li>Time management buat hunting</li>
+                        <li>Mental prep biar gak burnout</li>
+                        <li>Fokus ke high-value target</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Modul 2 Intro -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">02</div>
+                <h2>Fundamentals Tapi Versi Hunter 2025</h2>
+                <p class="lead">Fundamental itu penting, tapi bukan yang basic.<br>Ini fundamental versi modern.</p>
+            </div>
+        </section>
+
+        <!-- Slide 4: Modul 2 - Reverse API -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">02</div>
+                <h3>🔍 Reverse API lewat Traffic Apps Modern</h3>
+                <div class="content-box">
+                    <p>Web, mobile, IoT — semua platform. Lu bakal bisa trace request chain dari mana aja.</p>
+                    <div class="code-example">
+                        <p><strong>Tools yang dipake:</strong></p>
+                        <ul>
+                            <li>Burp Suite / mitmproxy</li>
+                            <li>Frida (mobile)</li>
+                            <li>Wireshark (IoT)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Modul 2 - CI/CD -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">02</div>
+                <h3>⚙️ Trace Request Chain CI/CD</h3>
+                <div class="content-box">
+                    <p><strong>GitHub Actions → API → Microservice</strong></p>
+                    <p>Gimana caranya nge-map alur deployment yang kompleks:</p>
+                    <ul class="bullet-list">
+                        <li>Baca workflow files (.github/workflows)</li>
+                        <li>Trace environment variables</li>
+                        <li>Map service dependencies</li>
+                        <li>Find exposed secrets</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Modul 2 - Cloud Architecture -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">02</div>
+                <h3>☁️ Baca Arsitektur Cloud Kompleks</h3>
+                <div class="content-box">
+                    <p>Arsitektur modern yang bikin bingung hunter biasa:</p>
+                    <div class="grid-2">
+                        <div>
+                            <p><strong>Serverless</strong></p>
+                            <ul>
+                                <li>Lambda functions</li>
+                                <li>Function URLs</li>
+                                <li>Cold start issues</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p><strong>Event-Driven</strong></p>
+                            <ul>
+                                <li>SQS/SNS queues</li>
+                                <li>EventBridge</li>
+                                <li>Async processing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Modul 3 Intro -->
+        <section class="slide featured">
+            <div class="slide-content center">
+                <div class="slide-number">03</div>
+                <h2>Top Modern Vulnerabilities</h2>
+                <p class="lead">🔥 Anti-Reguler Edition 🔥</p>
+                <p>Bukan XSS, bukan SQLi, bukan IDOR.<br>Tapi vuln yang beneran dipake hunter 2025 buat dapet duit gede.</p>
+            </div>
+        </section>
+
+        <!-- Slide 8: Broken Cloud IAM -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">03.1</div>
+                <h3>Broken Cloud IAM</h3>
+                <p class="subtitle">Privilege Escalation di Cloud Providers</p>
+                <div class="content-box">
+                    <div class="vuln-item">
+                        <h4>→ Forgotten IAM Role</h4>
+                        <p>Role yang lupa di-revoke, masih bisa dipake</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>→ Over-permissioned Lambda</h4>
+                        <p>Function yang punya akses lebih dari yang dibutuhin</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>→ Cross-account Role Hijacking</h4>
+                        <p>Exploit trust relationship antar AWS account</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Serverless Injection -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">03.2</div>
+                <h3>Serverless Injection</h3>
+                <p class="subtitle">Serverless bukan berarti secure</p>
+                <div class="content-box">
+                    <div class="vuln-item">
+                        <h4>→ Event Injection (SQS/SNS Poisoning)</h4>
+                        <p>Inject malicious event ke queue</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>→ JSON-based Execution Hijack</h4>
+                        <p>Manipulasi JSON buat execute arbitrary code</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>→ Function URL Misconfig</h4>
+                        <p>Public function yang harusnya private</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: API Rate Limit Bypass -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">03.3</div>
+                <h3>API Rate Limit Bypass → Multi-Stage Exploit</h3>
+                <div class="content-box">
+                    <p>Rate limit bypass itu cuma awal. Yang penting adalah <strong>chaining-nya</strong>:</p>
+                    <div class="exploit-chain">
+                        <div class="chain-step">
+                            <span class="step-num">1</span>
+                            <p>Bypass rate limit</p>
+                        </div>
+                        <div class="chain-arrow">→</div>
+                        <div class="chain-step">
+                            <span class="step-num">2</span>
+                            <p>Unlimited enumeration</p>
+                        </div>
+                        <div class="chain-arrow">→</div>
+                        <div class="chain-step">
+                            <span class="step-num">3</span>
+                            <p>Account takeover</p>
+                        </div>
+                    </div>
+                    <div class="note">
+                        <p><strong>Financial manipulation:</strong> Race condition berbasis API buat manipulasi duit</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: OAuth & SSO -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">03.4</div>
+                <h3>OAuth & SSO Misconfig</h3>
+                <p class="subtitle">Yang jarang dibahas</p>
+                <div class="content-box">
+                    <ul class="bullet-list">
+                        <li><strong>PKCE mis-implementation</strong> — implementasi PKCE yang salah</li>
+                        <li><strong>Token substitution</strong> — tuker token user lain</li>
+                        <li><strong>Third-party redirect cross-service chaining</strong> — chain redirect dari multiple service</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: GraphQL Abuse -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">03.5</div>
+                <h3>GraphQL Abuse</h3>
+                <div class="content-box">
+                    <p>GraphQL makin populer, tapi banyak yang salah implement:</p>
+                    <div class="grid-2">
+                        <div class="vuln-item">
+                            <h4>Field-level Auth Bypass</h4>
+                            <p>Akses field yang harusnya restricted</p>
+                        </div>
+                        <div class="vuln-item">
+                            <h4>Deep Query DoS</h4>
+                            <p>Query nested yang bikin server down</p>
+                        </div>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>Data Relationship Leakage</h4>
+                        <p>Leak data lewat relationship antar object</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: Race Condition Modern -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">03.6</div>
+                <h3>Race Condition Modern</h3>
+                <p class="subtitle">Bukan sekedar "double request"</p>
+                <div class="content-box">
+                    <div class="vuln-item">
+                        <h4>💰 Money Transfer Duplication</h4>
+                        <p>Transfer duit 2x dengan balance 1x</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>📦 Order Manipulation via Async Queues</h4>
+                        <p>Manipulasi order lewat async processing</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>📁 Upload Race</h4>
+                        <p>Kayak yang ditemuin di Dropbox Replay — upload file yang harusnya gak bisa</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 14: Desync -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">03.7</div>
+                <h3>Desync (HTTP/2 & HTTP/3)</h3>
+                <p class="subtitle">Request smuggling versi modern</p>
+                <div class="content-box">
+                    <p>Lebih kompleks dari H1 klasik:</p>
+                    <ul class="bullet-list">
+                        <li><strong>Request smuggling modern</strong> — exploit perbedaan parsing HTTP/2 dan HTTP/3</li>
+                        <li><strong>CDN poisoning</strong> — poison cache CDN lewat desync</li>
+                    </ul>
+                    <div class="note">
+                        <p>⚠️ Butuh deep understanding HTTP protocol</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 15: Modul 4 Intro -->
+        <section class="slide featured">
+            <div class="slide-content center">
+                <div class="slide-number">04</div>
+                <h2>Vulnerability Meta 2025</h2>
+                <p class="lead">🔥 Beneran Worth It Hunting 🔥</p>
+                <p>Vuln yang lagi hot di 2025.<br>Yang bayarannya gede dan masih jarang yang bisa exploit.</p>
+            </div>
+        </section>
+
+        <!-- Slide 16: AI App Exploitation -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">04.1</div>
+                <h3>AI App Exploitation</h3>
+                <p class="subtitle">AI app lagi booming, security-nya masih kacau</p>
+                <div class="content-box">
+                    <div class="vuln-item">
+                        <h4>→ Jailbreak + Data Extraction Chaining</h4>
+                        <p>Bypass filter AI terus extract data sensitive</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>→ Retrieval Poisoning</h4>
+                        <p>Poison vector database buat manipulasi output AI</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>→ Plugins & Tools Injection</h4>
+                        <p>LLM agent abuse — inject malicious plugin ke AI agent</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 17: Supply Chain -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">04.2</div>
+                <h3>Supply Chain Real Case</h3>
+                <div class="content-box">
+                    <p>Supply chain attack itu gak cuma teori:</p>
+                    <div class="vuln-item">
+                        <h4>→ Dependency Confusion</h4>
+                        <p>Di private monorepo — upload package ke public registry dengan nama yang sama</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>→ Workspace Hijacking (npm/pnpm)</h4>
+                        <p>Hijack workspace package</p>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>→ Build Pipeline Secret Exposure</h4>
+                        <p>Extract secret dari CI/CD logs</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 18: Secret Sprawl -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">04.3</div>
+                <h3>Secret Sprawl Hunting</h3>
+                <div class="content-box">
+                    <p>Secret bertebaran dimana-mana. Lu cuma perlu tau dimana nyarinya:</p>
+                    <ul class="bullet-list">
+                        <li><strong>Leaked cloud creds dari CI/CD</strong> — cari credential yang ke-leak di pipeline</li>
+                        <li><strong>Token-lifetime abuse</strong> — abuse token yang harusnya udah expired</li>
+                        <li><strong>Weakly-scoped PAT (GitHub)</strong> — Personal Access Token yang terlalu permissive</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 19: Financial Logic Bugs -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">04.4</div>
+                <h3>Financial Logic Bugs</h3>
+                <p class="subtitle">💰 Goldmine — satu bug bisa $20k+</p>
+                <div class="content-box">
+                    <div class="grid-2">
+                        <div class="vuln-item">
+                            <h4>Reward Manipulation</h4>
+                            <p>Manipulasi sistem reward/referral</p>
+                        </div>
+                        <div class="vuln-item">
+                            <h4>Refund Abuse</h4>
+                            <p>Dapet refund tanpa return barang</p>
+                        </div>
+                    </div>
+                    <div class="vuln-item">
+                        <h4>Multi-currency Miscalc</h4>
+                        <p>Exploit bug di currency conversion</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 20: Modul 5 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">05</div>
+                <h2>AI-powered Hunting Workflow</h2>
+                <p class="subtitle">2025 itu zamannya AI. Bukan cuma manual lagi.</p>
+                <div class="content-box">
+                    <ul class="bullet-list">
+                        <li><strong>🤖 AI-assisted static analysis</strong> — Pake AI buat analyze code dan nemuin vuln pattern</li>
+                        <li><strong>🗺️ Auto-mapping microservice topology</strong> — Auto-generate architecture diagram dari API traffic</li>
+                        <li><strong>⚡ Auto-generate exploit chain</strong> — Feed API schema ke AI, dapet exploit chain suggestions</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 21: Modul 6 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">06</div>
+                <h2>Reporting High-Impact Bugs</h2>
+                <p class="subtitle">Non-Reguler Style</p>
+                <div class="content-box">
+                    <p>Nemuin vuln itu cuma 50%. Yang 50% lagi adalah gimana lu nge-report.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 22: Report Writing -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">06.1</div>
+                <h3>📝 Cara Nulis Report yang Proper</h3>
+                <div class="content-box">
+                    <p>Format report yang bikin triager langsung ngerti ini vuln serius:</p>
+                    <div class="report-structure">
+                        <div class="report-item">1. <strong>Title</strong> — Jelas & spesifik</div>
+                        <div class="report-item">2. <strong>Impact</strong> — Business impact, bukan cuma technical</div>
+                        <div class="report-item">3. <strong>PoC</strong> — Step-by-step, bisa di-reproduce</div>
+                        <div class="report-item">4. <strong>Video/Screenshot</strong> — Visual proof</div>
+                        <div class="report-item">5. <strong>Remediation</strong> — Kasih solusi</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 23: PoC Chaining -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">06.2</div>
+                <h3>🔗 PoC Chaining</h3>
+                <p class="subtitle">Gabungin 2 vuln biasa → 1 vuln high-severity</p>
+                <div class="content-box">
+                    <div class="chain-example">
+                        <p><strong>Example 1:</strong></p>
+                        <p>IDOR + CSRF = <span class="highlight">Account Takeover</span></p>
+                    </div>
+                    <div class="chain-example">
+                        <p><strong>Example 2:</strong></p>
+                        <p>Rate limit bypass + Enumeration = <span class="highlight">Mass Data Breach</span></p>
+                    </div>
+                    <div class="chain-example">
+                        <p><strong>Example 3:</strong></p>
+                        <p>XSS + OAuth misconfig = <span class="highlight">Full Account Compromise</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 24: Business Impact -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="slide-number">06.3</div>
+                <h3>💰 Nambahin Business Impact</h3>
+                <div class="content-box">
+                    <p>Jangan cuma jelasin technical impact. Jelasin juga business impact-nya:</p>
+                    <div class="comparison">
+                        <div class="bad">
+                            <p>❌ "Attacker bisa access user data"</p>
+                        </div>
+                        <div class="good">
+                            <p>✅ "Attacker bisa steal $X dari user"</p>
+                            <p>✅ "Attacker bisa access 1M+ user PII"</p>
+                            <p>✅ "Bisa cause reputational damage & GDPR fine"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 25: Closing -->
+        <section class="slide">
+            <div class="slide-content center">
+                <h2>That's It! 🔥</h2>
+                <p class="lead">Sekarang lu udah tau vuln apa yang worth it buat di-hunt.</p>
+                <p>Sisanya tinggal praktek, praktek, praktek.</p>
+                <div class="closing-note">
+                    <p>Good luck hunting! 💰</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Keyboard Help -->
+    <div class="keyboard-help" id="keyboardHelp">
+        <div><kbd>↑</kbd><kbd>↓</kbd> atau <kbd>J</kbd><kbd>K</kbd> - Navigasi</div>
+        <div><kbd>1-9</kbd> - Lompat ke slide | <kbd>Space</kbd> - Next</div>
+        <div>Tekan <kbd>?</kbd> untuk hide/show</div>
+    </div>
+
+    <script src="slides.js"></script>
+</body>
+</html>
